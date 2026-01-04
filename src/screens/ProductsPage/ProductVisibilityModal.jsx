@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "../../Api/axios"; // adjust path if needed
+import axios from "../../Api/Axios"; // adjust path if needed
 import { Button } from "../../components/ui/button";
 import { toast } from "sonner";
 

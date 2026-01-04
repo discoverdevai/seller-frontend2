@@ -3,7 +3,7 @@ import { Button } from "../../../../components/ui/button";
 import { Card, CardContent } from "../../../../components/ui/card";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState , useMemo } from "react";
-import api from "../../../../Api/axios"; // axios instance اللي انت عامله
+import api from "../../../../Api/Axios"; // axios instance اللي انت عامله
 import { useNavigate } from "react-router-dom";
 
 

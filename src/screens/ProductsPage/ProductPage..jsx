@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../../components/Layout";
 import { useTranslation } from "react-i18next";
-import api from "../../Api/axios";
+import api from "../../Api/Axios";
 
 import { ProductList } from "./ProductList";
 import { ProductsPage } from "./ProductsPage";

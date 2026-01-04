@@ -11,7 +11,7 @@ import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Layout } from "../../components/Layout";
 import { SuccessModal } from "./SuccessAddingModal";
-import api from "../../Api/axios";
+import api from "../../Api/Axios";
 
 export const AddProduct = () => {
   const navigate = useNavigate();

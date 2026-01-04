@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "../../Api/axios";
+import axios from "../../Api/Axios";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Switch } from "../../components/ui/switch";

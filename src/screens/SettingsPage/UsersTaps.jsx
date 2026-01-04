@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
 import { AddMemberModal } from "./AddUserModal";
 import { DeleteUserModal } from "./DeleteUserModal";
-import api from "../../Api/axios";
+import api from "../../Api/Axios";
 
 export const UsersTabs = () => {
   const [teamMembers, setTeamMembers] = useState([]);

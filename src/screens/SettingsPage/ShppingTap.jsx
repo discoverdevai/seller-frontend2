@@ -12,7 +12,7 @@ import {
 } from "../../components/ui/select";
 import { Button } from "../../components/ui/button";
 import { Switch } from "../../components/ui/switch";
-import api from "../../Api/axios";
+import api from "../../Api/Axios";
 
 /* ===============================
    Shipping companies configuration

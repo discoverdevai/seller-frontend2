@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import api from "../../Api/axios";
+import api from "../../Api/Axios";
 import { Layout } from "../../components/Layout";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";

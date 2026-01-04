@@ -4,7 +4,7 @@ import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { useNavigate } from "react-router-dom";
-import api from "../../Api/axios"; // axios instance اللي انت عامله
+import api from "../../Api/Axios"; // axios instance اللي انت عامله
 
 
 import {

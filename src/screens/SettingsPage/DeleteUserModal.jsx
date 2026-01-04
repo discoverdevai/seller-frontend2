@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../../components/ui/button";
-import api from "../../Api/axios";
+import api from "../../Api/Axios";
 import { useNavigate } from "react-router-dom";
 
 export const DeleteUserModal = ({ user, onCancel }) => {
