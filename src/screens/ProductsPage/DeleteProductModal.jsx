@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import axios from "../../Api/Axios"; // adjust path if needed
 import { Button } from "../../components/ui/button";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export const DeleteProductModal = ({ product, onCancel }) => {
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -14,16 +18,16 @@ export const DeleteProductModal = ({ product, onCancel }) => {
 
       const res = await axios.delete(`/api/vendor/products/${product.id}`);
 
-if (!res.data.success) {
-  throw new Error(res.data.message);
-}
+      if (!res.data.success) {
+        throw new Error(res.data.message);
+      }
 
-toast.success(res.data.message || "تم حذف المنتج بنجاح");
-onCancel();
-alert("deleted" +res.data.message)
+      toast.success(res.data.message || t("delete.success"));
+      onCancel();
+      navigate(0);
     } catch (error) {
       console.error(error);
-      toast.error("حدث خطأ أثناء حذف المنتج");
+      toast.error(t("delete.error"));
     } finally {
       setLoading(false);
     }
@@ -42,11 +46,11 @@ alert("deleted" +res.data.message)
           <div className="flex flex-col gap-8 w-full items-center">
             <div className="flex flex-col w-[662px] gap-4 items-center">
               <h1 className="font-semibold text-[#1a1713] text-[30px] leading-10 text-center">
-                هل أنت متأكد أنك تريد حذف المنتج "{product?.name}"؟
+                {t("delete.confirmation", { name: product?.name })}
               </h1>
 
               <p className="text-[#4f4f4f] text-center">
-                لا يمكن استرجاع المنتج بعد الحذف.
+                {t("delete.warning")}
               </p>
             </div>
 
@@ -57,7 +61,7 @@ alert("deleted" +res.data.message)
                 onClick={onCancel}
                 disabled={loading}
               >
-                إلغاء
+                {t("delete.cancel")}
               </Button>
 
               <Button
@@ -66,7 +70,7 @@ alert("deleted" +res.data.message)
                 onClick={handleDelete}
                 disabled={loading}
               >
-                {loading ? "جارٍ الحذف..." : "حذف المنتج"}
+                {loading ? t("delete.deleting") : t("delete.confirm")}
               </Button>
             </div>
           </div>

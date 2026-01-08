@@ -286,7 +286,7 @@ export const InventoryPage = () => {
             const isLowStock = item.stockQuantity <= 400 && item.stockQuantity > 0;
             const isOutOfStock = item.stockQuantity === 0;
   
-            let status = "متوفر"; let statusBg = "bg-emerald-50"; let statusColor = "text-[#005b10]"; let suggestion = "أضف 20 قطعة الي مخزونك"; if (isHidden) { status = "مخفي"; statusBg = "bg-[#f4f4f4]"; statusColor = "text-[#4f4f4f]"; suggestion = "المنتج مخفي من قبل المتجر"; } else if (isOutOfStock) { status = "غير متوفر"; statusBg = "bg-[#fff3f3]"; statusColor = "text-[#b90000]"; suggestion = "المنتج غير متوفر حاليًا"; } else if (isLowStock) { status = "منخفض"; statusBg = "bg-[#fff3f3]"; statusColor = "text-[#b90000]"; suggestion = "أضف كمية للمخزون"; }
+            let status = "متوفر"; let statusBg = "bg-emerald-50"; let statusColor = "text-[#005b10]"; let suggestion = "المنتج متوفر"; if (isHidden) { status = "مخفي"; statusBg = "bg-[#f4f4f4]"; statusColor = "text-[#4f4f4f]"; suggestion = "المنتج مخفي من قبل المتجر"; } else if (isOutOfStock) { status = "غير متوفر"; statusBg = "bg-[#fff3f3]"; statusColor = "text-[#b90000]"; suggestion = "المنتج غير متوفر حاليًا"; } else if (isLowStock) { status = "منخفض"; statusBg = "bg-[#fff3f3]"; statusColor = "text-[#b90000]"; suggestion = "أضف كمية للمخزون"; }
   
   
             return {
@@ -488,10 +488,10 @@ const closeModal = () => {
                           </TableCell>
 
                           <TableCell  className="w-[120px] h-16 border border-solid border-[#f1f2f4] text-center font-medium text-[#121212] text-sm leading-[14px] [font-family:'Cairo',Helvetica] tracking-[0]">
-                           <Button onClick={() => {
+                           {/* <Button onClick={() => {
     setSelectedProduct(row);
     setIsOpen(true);
-  }}> {row.name}</Button>
+  }}> {row.name}</Button> */}{row.name}
                            
                           </TableCell>
 

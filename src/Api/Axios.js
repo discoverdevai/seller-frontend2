@@ -11,9 +11,10 @@ api.interceptors.request.use(
     const lang = i18n.language || "ar";
     const userData = JSON.parse(localStorage.getItem("userData"));
     const token = userData?.token;
-    // if (token) {
-      config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJib3JhIiwiaWF0IjoxNzY3NDgyMjE0LCJleHAiOjE3Njc1Njg2MTR9.EMjZiExvTjCtdCXY40y6YlWadLqPg2ZnTIZl7qpeONc`; // attach token
-    // }
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    
     config.params = {
       ...(config.params || {}),
       lang: lang, // e.g., "en" or "ar"

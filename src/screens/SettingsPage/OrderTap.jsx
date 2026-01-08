@@ -3,13 +3,15 @@ import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import api from "../../Api/Axios";
+import { useTranslation } from "react-i18next";
 
 export const OrderTap = () => {
+  const { t } = useTranslation();
+
   const [returnPeriodDays, setReturnPeriodDays] = useState("");
   const [returnPolicyText, setReturnPolicyText] = useState("");
   const [minimumOrderLimit, setMinimumOrderLimit] = useState("");
   const [orderProcessingTimeDays, setOrderProcessingTimeDays] = useState("");
-
   const [loading, setLoading] = useState(false);
 
   /* =========================
@@ -21,7 +23,6 @@ export const OrderTap = () => {
         const response = await api.get("/api/vendor/settings/orders");
         if (response.data.success) {
           const data = response.data.data;
-
           setReturnPeriodDays(data.returnPeriodDays ?? "");
           setReturnPolicyText(data.returnPolicyText ?? "");
           setMinimumOrderLimit(data.minimumOrderLimit ?? "");
@@ -53,10 +54,11 @@ export const OrderTap = () => {
       const response = await api.put("/api/vendor/settings/orders", body);
 
       if (response.data.success) {
-        alert("تم حفظ الإعدادات بنجاح");
+        alert(t("orders.savedSuccessfully"));
       }
     } catch (error) {
       console.error("Failed to save order settings:", error);
+      alert(t("orders.saveFailed"));
     } finally {
       setLoading(false);
     }
@@ -72,10 +74,10 @@ export const OrderTap = () => {
             <Card className="bg-[#fefefe] rounded-[10px] border-0">
               <CardContent className="p-6">
                 <div className="flex flex-col gap-6">
-                  <h2 className="text-xl font-semibold">سياسة الارجاع و الاستبدال</h2>
+                  <h2 className="text-xl font-semibold">{t("orders.returnPolicyTitle")}</h2>
 
                   <div className="flex flex-col gap-3">
-                    <label>فترة الارجاع المسموحة (بالأيام)</label>
+                    <label>{t("orders.returnPeriodDays")}</label>
                     <Input
                       type="number"
                       value={returnPeriodDays}
@@ -85,7 +87,7 @@ export const OrderTap = () => {
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <label>نص سياسة الارجاع</label>
+                    <label>{t("orders.returnPolicyText")}</label>
                     <Input
                       value={returnPolicyText}
                       onChange={(e) => setReturnPolicyText(e.target.value)}
@@ -100,10 +102,10 @@ export const OrderTap = () => {
             <Card className="bg-[#fefefe] rounded-[10px] border-0">
               <CardContent className="p-6">
                 <div className="flex flex-col gap-6">
-                  <h2 className="text-xl font-semibold">سياسة الطلب</h2>
+                  <h2 className="text-xl font-semibold">{t("orders.orderPolicyTitle")}</h2>
 
                   <div className="flex flex-col gap-3">
-                    <label>الحد الأدنى للطلب</label>
+                    <label>{t("orders.minimumOrderLimit")}</label>
                     <Input
                       type="number"
                       value={minimumOrderLimit}
@@ -113,7 +115,7 @@ export const OrderTap = () => {
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <label>مدة معالجة الطلب (بالأيام)</label>
+                    <label>{t("orders.orderProcessingTime")}</label>
                     <Input
                       type="number"
                       value={orderProcessingTimeDays}
@@ -133,7 +135,7 @@ export const OrderTap = () => {
             onClick={handleSave}
             disabled={loading}
           >
-            {loading ? "جاري الحفظ..." : "حفظ"}
+            {loading ? t("orders.saving") : t("orders.save")}
           </Button>
         </div>
       </main>

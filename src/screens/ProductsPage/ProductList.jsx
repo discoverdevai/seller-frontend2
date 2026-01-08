@@ -38,17 +38,17 @@ const sidebarIcons = [
   { icon: "/presention-chart-style7.svg", alt: "Presention chart" },
 ];
 
-const tableHeaders = [
-  { label: "صورة المنتج", width: "w-[94px]" },
-  { label: "اسم المنتج", width: "w-[120px]" },
-  { label: "الرمز التعريفي", width: "w-[100px]" },
-  { label: "الفئة", width: "w-[103px]" },
-  { label: "الكمية الحالية", width: "w-[120px]" },
-  { label: "الحد الادني", width: "w-[126px]" },
-  { label: "الحالة", width: "w-[107px]" },
-  { label: "اخر تعديل", width: "w-[137px]" },
-  { label: "اقتراح اعادة التخزين", width: "w-[204px]" },
-  { label: "الاجراءات", width: "w-[177px]" },
+const tableHeaders = (t) => [
+  { label: t("products.table.image"), width: "w-[94px]" },
+  { label: t("products.table.name"), width: "w-[120px]" },
+  { label: t("products.table.sku"), width: "w-[100px]" },
+  { label: t("products.table.category"), width: "w-[103px]" },
+  { label: t("products.table.quantity"), width: "w-[120px]" },
+  { label: t("products.table.minStock"), width: "w-[126px]" },
+  { label: t("products.table.status"), width: "w-[107px]" },
+  { label: t("products.table.lastModified"), width: "w-[137px]" },
+  { label: t("products.table.suggestion"), width: "w-[204px]" },
+  { label: t("products.table.actions"), width: "w-[177px]" },
 ];
 
 
@@ -57,56 +57,56 @@ const tableHeaders = [
 
 
 export const ProductList = ({ products }) => {
-  const { t, i18n } = useTranslation();
+const { t, i18n } = useTranslation();
+
+  const headers = tableHeaders(t);
 
 
 
 const statisticsUIMap = useMemo(() => ({
   ALL_PRODUCTS: {
-    title: t("all_products_title"),  // localized
-    unit: t("منتج"),
-    bgColor: "bg-[#f3f5fe]",
-    textColor: "text-[#0b27a5]",
-    iconBg: "bg-[#0b27a5]",
-    icon: "/mask-group-7.png",
-  },
-
-  AVAILABLE_PRODUCTS: {
-    title: t("available_products_title"),  // localized
-    unit: t("منتج"),
-    bgColor: "bg-emerald-50",
-    textColor: "text-[#005b10]",
-    iconBg: "bg-[#005b10]",
-    icon: "/mask-group-6.png",
-  },
-
-  LOW_STOCK_PRODUCTS: {
-    title: t("low_stock_products_title"),  // localized
-    unit: t("منتج"),
-    bgColor: "bg-[#fffcf3]",
-    textColor: "text-[#926e00]",
-    iconBg: "bg-[#ffc107]",
-    icon: "/mask-group-5.png",
-  },
-
-  NOT_AVAILABLE_PRODUCTS: {
-    title: t("not_available_products_title"),  // localized
-    unit: t("منتج"),
-    bgColor: "bg-[#fff3f3]",
-    textColor: "text-[#b90000]",
-    iconBg: "bg-[#b90000]",
-    icon: "/mask-group-4.png",
-  },
-
-  HIDDEN_PRODUCTS: {
-    title: t("hidden_products_title"),  // localized
-    unit: t("منتج"),
-    bgColor: "bg-[#f4f4f4]",
-    textColor: "text-[#4f4f4f]",
-    iconBg: "bg-[#4f4f4f]",
-    icon: "/mask-group-3.png",
-  },
-}), [t, i18n.language]); 
+        title: t("statistics.all"),
+        unit: t("statistics.unit"),
+        bgColor: "bg-[#f3f5fe]",
+        textColor: "text-[#0b27a5]",
+        iconBg: "bg-[#0b27a5]",
+        icon: "/mask-group-7.png",
+      },
+      AVAILABLE_PRODUCTS: {
+        title: t("statistics.available"),
+        unit: t("statistics.unit"),
+        bgColor: "bg-emerald-50",
+        textColor: "text-[#005b10]",
+        iconBg: "bg-[#005b10]",
+        icon: "/mask-group-6.png",
+      },
+      LOW_STOCK_PRODUCTS: {
+        title: t("statistics.lowStock"),
+        unit: t("statistics.unit"),
+        bgColor: "bg-[#fffcf3]",
+        textColor: "text-[#926e00]",
+        iconBg: "bg-[#ffc107]",
+        icon: "/mask-group-5.png",
+      },
+      NOT_AVAILABLE_PRODUCTS: {
+        title: t("statistics.notAvailable"),
+        unit: t("statistics.unit"),
+        bgColor: "bg-[#fff3f3]",
+        textColor: "text-[#b90000]",
+        iconBg: "bg-[#b90000]",
+        icon: "/mask-group-4.png",
+      },
+      HIDDEN_PRODUCTS: {
+        title: t("statistics.hidden"),
+        unit: t("statistics.unit"),
+        bgColor: "bg-[#f4f4f4]",
+        textColor: "text-[#4f4f4f]",
+        iconBg: "bg-[#4f4f4f]",
+        icon: "/mask-group-3.png",
+      },
+    }),
+    [t, i18n.language]
+  );
   const handleCloseModal = (refresh) => {
   setIsOpen(false);
   if (refresh) window.location.reload();
@@ -176,13 +176,13 @@ const closeModal = () => {
         <main className="flex-1 bg-[#fefefe] p-12">
           <div className="flex flex-col gap-8 max-w-[1288px]">
             <h1 className="font-h2-semiboald font-[number:var(--h2-semiboald-font-weight)] text-black text-[length:var(--h2-semiboald-font-size)] tracking-[var(--h2-semiboald-letter-spacing)] leading-[var(--h2-semiboald-line-height)] [font-style:var(--h2-semiboald-font-style)]">
-              المنتجات
+             {t("products.title")}
             </h1>
 
             <div className="flex flex-col gap-12">
               <div className="flex items-center gap-6">
   {loadingStats ? (
-    <div className="text-gray-500">جاري تحميل الإحصائيات...</div>
+    <div className="text-gray-500">{t("products.loadingStats")}</div>
   ) : (
     statsCards.map((card, index) => (
       <div
@@ -222,7 +222,7 @@ const closeModal = () => {
               <div className="flex flex-col gap-6">
                 <div className="flex items-center justify-between">
                   <Button  onClick={() => navigate("/addProduct")}  className="w-[376px] h-14 rounded-[10px] bg-[linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)] font-button-text font-[number:var(--button-text-font-weight)] text-white text-[length:var(--button-text-font-size)] tracking-[var(--button-text-letter-spacing)] leading-[var(--button-text-line-height)] [font-style:var(--button-text-font-style)]">
-                    إضافة منتج جديد
+                  {t("products.addNew")}
                   </Button>
 
                   <div className="flex items-center gap-3">
@@ -235,7 +235,7 @@ const closeModal = () => {
                     <div className="flex items-center gap-2 px-3 py-4 rounded-[10px] border border-solid border-[#c3c3c3] w-[501px]">
                       <SearchIcon className="w-6 h-6" />
                       <Input
-                        placeholder="البحث"
+                        placeholder={t("products.search")}
                         className="border-0 font-[number:var(--placeholder-font-weight)] text-[#4f4f4f] text-[length:var(--placeholder-font-size)] leading-[var(--placeholder-line-height)] font-placeholder tracking-[var(--placeholder-letter-spacing)] [font-style:var(--placeholder-font-style)] focus-visible:ring-0 focus-visible:ring-offset-0"
                       />
                     </div>
@@ -246,7 +246,7 @@ const closeModal = () => {
                   <Table>
                     <TableHeader>
                       <TableRow className="border-0">
-                        {tableHeaders.map((header, index) => (
+                        {headers.map((header, index) => (
                           <TableHead
                             key={index}
                             className={`${header.width} h-12 ${

@@ -1,7 +1,18 @@
 import React from "react";
 import { Button } from "../../components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export const LogoutModal = ({ onClose }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // إزالة بيانات المستخدم
+    localStorage.removeItem("userData");
+
+    // إعادة التوجيه إلى صفحة تسجيل الدخول
+    navigate("/signin");
+  };
+
   return (
     <div className="bg-[#fefefe] w-[975px] h-[542px] flex items-center justify-center rounded-xl">
       <div className="w-[927px] max-w-full flex flex-col gap-2 items-center px-6">
@@ -31,7 +42,10 @@ export const LogoutModal = ({ onClose }) => {
               إلغاء
             </Button>
 
-            <Button className="w-full max-w-[451px] h-14 justify-center gap-2 p-2 rounded-[10px] bg-[linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)] hover:opacity-90">
+            <Button
+              className="w-full max-w-[451px] h-14 justify-center gap-2 p-2 rounded-[10px] bg-[linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)] hover:opacity-90"
+              onClick={handleLogout}
+            >
               تسجيل الخروج
             </Button>
           </div>

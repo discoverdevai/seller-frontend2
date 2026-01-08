@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
-import api from "../../Api/Axios"; // Axios instance
+import api from "../../Api/Axios";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Button } from "../../components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const contactFields = [
-  { key: "mobileNumber", label: "رقم الجوال", type: "phone" },
-  { key: "email", label: "البريد الالكتروني" },
-  { key: "facebookLink", label: "رابط الفيسبوك" },
-  { key: "instagramLink", label: "رابط الانستجرام" },
-  { key: "whatsappLink", label: "رابط واتساب" },
+  { key: "mobileNumber", labelKey: "general.mobileNumber", type: "phone" },
+  { key: "email", labelKey: "general.email" },
+  { key: "facebookLink", labelKey: "general.facebookLink" },
+  { key: "instagramLink", labelKey: "general.instagramLink" },
+  { key: "whatsappLink", labelKey: "general.whatsappLink" },
 ];
 
 export const GeneralSettingsTab = () => {
+  const { t } = useTranslation();
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -35,56 +37,56 @@ export const GeneralSettingsTab = () => {
     fetchSettings();
   }, []);
 
-  // Handle input changes
   const handleChange = (key, value) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
-  // Save updated settings
   const handleSave = async () => {
     setSaving(true);
     try {
       const response = await api.put("/api/vendor/settings/general", settings);
       if (response.data.success) {
-        alert("Settings saved successfully!");
+        alert(t("general.settingsSaved"));
       } else {
-        alert("Failed to save settings: " + response.data.message);
+        alert(t("general.settingsSaveError") + ": " + response.data.message);
       }
     } catch (error) {
       console.error("Error saving settings:", error);
-      alert("An error occurred while saving settings.");
+      alert(t("general.settingsSaveErrorGeneric"));
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <div>Loading settings...</div>;
-  if (!settings) return <div>Unable to load settings</div>;
+  if (loading) return <div>{t("general.loadingSettings")}</div>;
+  if (!settings) return <div>{t("general.unableToLoadSettings")}</div>;
 
   return (
     <div className="flex flex-col gap-6 w-full ">
       {/* About Store */}
       <section className="flex flex-col items-start gap-6 w-full">
-        <h2 className="text-[#1a1713] text-xl font-semibold ">عن المتجر</h2>
+        <h2 className="text-[#1a1713] text-xl font-semibold ">
+          {t("general.aboutStore")}
+        </h2>
         <div className="w-full bg-[#fefefe] rounded-3xl overflow-hidden p-6 flex flex-col gap-8">
           <div className="flex flex-col items-start gap-3 w-full">
             <Label className="text-[#1a1713] font-medium">
-              شعار المتجر <span className="text-[#b90000]">*</span>
+              {t("general.storeLogo")} <span className="text-[#b90000]">*</span>
             </Label>
             <div className="w-full h-36 rounded-lg overflow-hidden border border-dashed border-[#c3c3c3] flex items-center justify-center">
               {settings.storeLogoUrl ? (
                 <img
                   src={settings.storeLogoUrl}
-                  alt="Store Logo"
+                  alt={t("general.storeLogo")}
                   className="h-full object-contain"
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center gap-2">
                   <img className="w-6 h-6" alt="Gallery export" src="/gallery-export.svg" />
                   <div className="text-center text-[#4f4f4f] text-sm leading-5 ">
-                    انقر لرفع الشعار
+                    {t("general.clickToUploadLogo")}
                     <br />
-                    <span className="text-xs">JPG / PNG، حجم لا يتجاوز 5MB.</span>
+                    <span className="text-xs">{t("general.uploadGuidelines")}</span>
                   </div>
                 </div>
               )}
@@ -93,7 +95,9 @@ export const GeneralSettingsTab = () => {
 
           <div className="flex flex-col md:flex-row items-start gap-6 w-full">
             <div className="flex flex-col flex-1 items-start gap-3 w-full">
-              <Label className="text-[#1a1713] font-medium">اسم المتجر</Label>
+              <Label className="text-[#1a1713] font-medium">
+                {t("general.storeName")}
+              </Label>
               <Input
                 className="h-14 px-4 py-2 w-full rounded-[10px] border border-solid border-[#c3c3c3] text-right"
                 value={settings.storeName || ""}
@@ -102,7 +106,9 @@ export const GeneralSettingsTab = () => {
             </div>
 
             <div className="flex flex-col flex-1 items-start gap-3 w-full">
-              <Label className="text-[#1a1713] font-medium">رقم الجوال</Label>
+              <Label className="text-[#1a1713] font-medium">
+                {t("general.mobileNumber")}
+              </Label>
               <Input
                 className="h-14 px-4 py-2 w-full rounded-[10px] border border-solid border-[#c3c3c3] text-right"
                 value={settings.mobileNumber || ""}
@@ -115,11 +121,15 @@ export const GeneralSettingsTab = () => {
 
       {/* Contact Section */}
       <section className="flex flex-col items-start gap-6 w-full">
-        <h2 className="text-[#1a1713] text-xl font-semibold ">بيانات التوصل</h2>
+        <h2 className="text-[#1a1713] text-xl font-semibold ">
+          {t("general.contactInformation")}
+        </h2>
         <div className="w-full bg-[#fefefe] rounded-3xl overflow-hidden p-6 flex flex-col gap-4">
           {contactFields.map((field, index) => (
             <div key={index} className="flex flex-col items-start gap-3 w-full">
-              <Label className="text-[#1a1713] font-medium">{field.label}</Label>
+              <Label className="text-[#1a1713] font-medium">
+                {t(field.labelKey)}
+              </Label>
               <Input
                 className="h-14 px-4 py-2 w-full rounded-[10px] border border-solid border-[#c3c3c3] text-right"
                 value={settings[field.key] || ""}
@@ -132,10 +142,12 @@ export const GeneralSettingsTab = () => {
 
       {/* General Settings */}
       <section className="flex flex-col items-start gap-6 w-full">
-        <h2 className="text-[#1a1713] text-xl font-semibold ">الاعدادات العامة</h2>
+        <h2 className="text-[#1a1713] text-xl font-semibold ">
+          {t("general.generalSettings")}
+        </h2>
         <div className="w-full bg-[#fefefe] rounded-3xl overflow-hidden p-6 flex flex-col gap-4">
           <div className="flex flex-col items-start gap-3 w-full">
-            <Label className="text-[#1a1713] font-medium">اللغة الافتراضية</Label>
+            <Label className="text-[#1a1713] font-medium">{t("general.defaultLanguage")}</Label>
             <Input
               className="h-14 px-4 py-2 w-full rounded-[10px] border border-solid border-[#c3c3c3] text-right"
               value={settings.defaultLanguage || ""}
@@ -144,7 +156,7 @@ export const GeneralSettingsTab = () => {
           </div>
 
           <div className="flex flex-col items-start gap-3 w-full">
-            <Label className="text-[#1a1713] font-medium w-full text-right">المنطقة الزمنية</Label>
+            <Label className="text-[#1a1713] font-medium w-full text-right">{t("general.timezone")}</Label>
             <Input
               className="h-14 px-4 py-2 w-full rounded-[10px] border border-solid border-[#c3c3c3] text-right"
               value={settings.timezone || ""}
@@ -153,7 +165,7 @@ export const GeneralSettingsTab = () => {
           </div>
 
           <div className="flex flex-col items-start gap-3 w-full">
-            <Label className="text-[#1a1713] font-medium">العملة الافتراضية</Label>
+            <Label className="text-[#1a1713] font-medium">{t("general.defaultCurrency")}</Label>
             <Input
               className="h-14 px-4 py-2 w-full rounded-[10px] border border-solid border-[#c3c3c3] text-right"
               value={settings.defaultCurrency || ""}
@@ -169,7 +181,7 @@ export const GeneralSettingsTab = () => {
         disabled={saving}
       >
         <span className="text-white font-medium">
-          {saving ? "جارٍ الحفظ..." : "حفظ"}
+          {saving ? t("general.saving") : t("general.save")}
         </span>
       </Button>
     </div>

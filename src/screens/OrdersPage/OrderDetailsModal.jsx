@@ -1,14 +1,17 @@
 import React from "react";
 import { Badge } from "../../components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 export const OrderDetailsModal = ({ order, onClose }) => {
+  const { t } = useTranslation();
+
   if (!order) return null;
 
   const orderDetails = [
-    { label: "رقم الطلب :", value: order.id },
-    { label: "اسم العميل :", value: order.customer },
-    { label: "تاريخ الطلب :", value: order.date },
-    { label: "طريقة الدفع :", value: order.payment },
+    { label: t("order.id"), value: order.id },
+    { label: t("order.customer_name"), value: order.customer },
+    { label: t("order.date"), value: order.date },
+    { label: t("order.payment_method"), value: order.payment },
   ];
 
   return (
@@ -25,7 +28,7 @@ export const OrderDetailsModal = ({ order, onClose }) => {
 
         <div className="mt-6 w-full px-6 flex flex-col gap-6">
           <h3 className="font-semibold text-[#141414] text-xl text-center">
-            تفاصيل الطلب
+            {t("order.details_title")}
           </h3>
 
           <div className="flex flex-col">
@@ -34,20 +37,14 @@ export const OrderDetailsModal = ({ order, onClose }) => {
                 key={index}
                 className="flex justify-start gap-3 py-3 border-b border-[#f2f2f2]"
               >
-               
-                <span className="font-medium">
-                  {detail.label}
-                </span>
-                 <span className="font-medium text-xl">
-                  {detail.value}
-                </span>
+                <span className="font-medium">{detail.label}</span>
+                <span className="font-medium text-xl">{detail.value}</span>
               </div>
             ))}
 
             {/* Status */}
             <div className="flex justify-start gap-3 py-3 border-b border-[#f2f2f2]">
-              
-              <span className="font-medium">الحالة :</span>
+              <span className="font-medium">{t("order.status")} :</span>
               <Badge className={`${order.statusColor} h-8 px-3 rounded-[10px]`}>
                 {order.status}
               </Badge>
@@ -56,7 +53,7 @@ export const OrderDetailsModal = ({ order, onClose }) => {
             {/* Total */}
             <div className="flex justify-start py-3">
               <span className="font-medium">
-                الاجمالي : {order.total}
+                {t("order.total")} : {order.total}
               </span>
             </div>
           </div>

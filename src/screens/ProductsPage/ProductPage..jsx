@@ -7,17 +7,17 @@ import { ProductList } from "./ProductList";
 import { ProductsPage } from "./ProductsPage";
 
 /* ---------------- Loader Component ---------------- */
-const Loader = () => (
+const Loader = ({ text }) => (
   <div className="flex items-center justify-center h-64">
     <span className="text-gray-500 text-lg">
-      جاري تحميل المنتجات...
+      {text}
     </span>
   </div>
 );
 
 /* ---------------- Product Page ---------------- */
 export const ProductPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
@@ -29,18 +29,19 @@ export const ProductPage = () => {
 
         if (res.data?.success) {
           const mappedProducts = res.data.data.map((item) => {
-            const isHidden = item.status === "SUSPENDED";
+            const isHidden =
+              item.status === "SUSPENDED" || item.status === "INACTIVE";
 
-            let status = "متوفر";
+            let status = t("products.status.active");
             let statusBg = "bg-emerald-50";
             let statusColor = "text-[#005b10]";
-            let suggestion = "أضف إلى مخزونك";
+            let suggestion = t("products.suggestion.restock");
 
             if (item.status === "INACTIVE") {
-              status = "مخفي";
+              status = t("products.status.inactive");
               statusBg = "bg-[#f4f4f4]";
               statusColor = "text-[#4f4f4f]";
-              suggestion = "المنتج مخفي من قبل المتجر";
+              suggestion = t("products.suggestion.inactive");
             }
 
             return {
@@ -58,12 +59,12 @@ export const ProductPage = () => {
               status,
               statusBg,
               statusColor,
-              lastModified: new Date(item.createdAt).toLocaleDateString("ar-EG"),
+              lastModified: new Date(item.createdAt).toLocaleDateString(
+                i18n.language === "ar" ? "ar-EG" : "en-US"
+              ),
               suggestion,
               isHidden,
-              visibilityIcon: isHidden
-                ? "/component-1-8.svg"
-                : "/component-1.svg",
+              visibilityIcon: "/component-1.svg",
             };
           });
 
@@ -80,7 +81,7 @@ export const ProductPage = () => {
     };
 
     fetchRecentProducts();
-  }, []);
+  }, [i18n.language]);
 
   const hasProducts = products.length > 0;
 
@@ -90,7 +91,7 @@ export const ProductPage = () => {
 
         {/* 🔥 Loading */}
         {loadingProducts ? (
-          <Loader />
+          <Loader text={t("products.loading")} />
         ) : hasProducts ? (
           <ProductList products={products} />
         ) : (

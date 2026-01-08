@@ -4,8 +4,11 @@ import { Button } from "../../components/ui/button";
 import { AddMemberModal } from "./AddUserModal";
 import { DeleteUserModal } from "./DeleteUserModal";
 import api from "../../Api/Axios";
+import { useTranslation } from "react-i18next";
 
 export const UsersTabs = () => {
+  const { t } = useTranslation();
+
   const [teamMembers, setTeamMembers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,12 +24,11 @@ export const UsersTabs = () => {
       try {
         const response = await api.get("/api/vendor/settings/staff");
         if (response.data.success) {
-          // Map API response to our UI structure
           const mappedMembers = response.data.data.map((member) => ({
             id: member.id,
             name: member.userName,
             email: member.userEmail,
-            role: member.roleDisplayName,
+            role: member.role,
             roleColor:
               member.role === "MANAGER"
                 ? "bg-[#ebf1fc]"
@@ -65,21 +67,21 @@ export const UsersTabs = () => {
     setShowAddMember(true);
   };
 
-  if (loading) return <div>Loading team members...</div>;
+  if (loading) return <div>{t("loadingTeamMembers")}</div>;
 
   return (
     <div className="flex flex-col gap-6 w-full ">
       {/* Add New Member Button */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <h2 className="font-h-3 text-[#1a1713] text-lg md:text-xl whitespace-nowrap">
-          اعضاء الفريق الحاليين
+          {t("team.currentMembers")}
         </h2>
 
         <Button
           onClick={openAddModal}
           className="w-full md:w-[337px] h-14 gap-2 p-2 rounded-[10px] bg-gradient-to-r from-[#805b3c] to-[#d3baa4] hover:opacity-90"
         >
-          اضافة عضو جديد
+          {t("team.addNewMember")}
         </Button>
       </div>
 
@@ -93,7 +95,7 @@ export const UsersTabs = () => {
             <div className="flex items-center gap-3">
               <Avatar className="w-14 h-14 bg-[#f2f2f2] rounded-[28px]">
                 <AvatarFallback>
-                  <img className="w-6 h-6" alt="User" src="/user.svg" />
+                  <img className="w-6 h-6" alt={t("user")} src="/user.svg" />
                 </AvatarFallback>
               </Avatar>
 
@@ -120,7 +122,7 @@ export const UsersTabs = () => {
                 onClick={() => openEditModal(member)}
                 className="flex items-center gap-2"
               >
-                <img className="w-6 h-6" alt="Edit" src="/edit-2.svg" />
+                <img className="w-6 h-6" alt={t("edit")} src="/edit-2.svg" />
               </button>
 
               <button
@@ -129,7 +131,7 @@ export const UsersTabs = () => {
                   setIsDeleteOpen(true);
                 }}
               >
-                <img className="w-6 h-6" alt="Trash" src="/trash.svg" />
+                <img className="w-6 h-6" alt={t("delete")} src="/trash.svg" />
               </button>
             </div>
           </div>
@@ -142,7 +144,6 @@ export const UsersTabs = () => {
           user={selectedUser}
           onClose={() => setShowAddMember(false)}
           onSave={(updatedMember) => {
-            // Update local list after save
             if (selectedUser) {
               setTeamMembers((prev) =>
                 prev.map((m) =>
@@ -167,7 +168,6 @@ export const UsersTabs = () => {
           }}
           onConfirm={async (user) => {
             try {
-              // Call API to delete user
               await api.delete(`/api/vendor/settings/staff/${user.id}`);
               setTeamMembers((prev) =>
                 prev.filter((m) => m.id !== user.id)

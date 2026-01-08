@@ -124,7 +124,7 @@ export const OrdersPage = () => {
             customer: o.customerName,
             date: new Date(o.submissionDate).toLocaleDateString("ar-EG"), // Format date
             payment: o.paymentWay,
-            total: `${o.totalCost.toLocaleString()} ر.س`,
+            total: `${o.totalCost.toLocaleString()} `,
             status: o.state,
             statusColor: getStatusColor(o.state),
           }));

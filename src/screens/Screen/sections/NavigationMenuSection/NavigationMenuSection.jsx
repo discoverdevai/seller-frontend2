@@ -1,18 +1,21 @@
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon,ChevronRightIcon } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "../../../../components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const navigationItems = [
-  { label: "الرئيسية", icon: "/home.svg", path: "/" },
-  { label: "المنتجات", icon: "/mask-group.png", path: "/products" },
-  { label: "الطلبات", icon: "/mask-group-1.png", path: "/orders" },
-  { label: "المخزون", icon: "/mask-group-2.png", path: "/inventory" },
-  { label: "التحليلات", icon: "/chart-1.svg", path: "/analytics" },
-  { label: "إعدادات المتجر", icon: "/presention-chart-style7.svg", path: "/settings" },
+  { labelKey: "home", icon: "/home.svg", path: "/home" },
+  { labelKey: "product", icon: "/mask-group.png", path: "/products" },
+  { labelKey: "orde", icon: "/mask-group-1.png", path: "/orders" },
+  { labelKey: "inventory", icon: "/mask-group-2.png", path: "/inventory" },
+  { labelKey: "analytics", icon: "/chart-1.svg", path: "/analytics" },
+  { labelKey: "settings", icon: "/presention-chart-style7.svg", path: "/settings" },
 ];
 
 export const NavigationMenuSection = () => {
+  const {i18n, t } = useTranslation();
+const isArabic = i18n.language === "ar";
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,22 +32,22 @@ export const NavigationMenuSection = () => {
   };
 
   return (
-    <nav 
-      className={`flex bg-[#835f40]   h-full transition-all duration-300  ${
+    <nav
+      className={`flex bg-[#835f40] h-full transition-all duration-300 ${
         collapsed ? "w-[104px]" : "w-[250px]"
       }`}
     >
       <div className="flex mt-8 w-full px-2 flex-col items-center gap-8">
-        {/* Logo and shrink button */}
+        {/* Logo & collapse button */}
         <div className="flex flex-col items-start gap-4 w-full">
           <Button
             variant="outline"
-            className={` rounded-[50px] border border-solid border-[#fefefe] bg-transparent hover:bg-transparent ${
-              collapsed ? " w-[70px] h-[42px]" : "flex w-[108px] h-[42px]" 
+            className={`rounded-[50px] border border-solid border-[#fefefe] bg-transparent hover:bg-transparent ${
+              collapsed ? "w-[70px] h-[42px]" : "flex w-[108px] h-[42px]"
             }`}
           >
             <div className="[font-family:'Cairo',Helvetica] font-normal text-[#fefefe] text-xl text-center">
-              اللوجو
+              {t("logo")}
             </div>
           </Button>
 
@@ -53,14 +56,22 @@ export const NavigationMenuSection = () => {
               onClick={toggleCollapsed}
               className="inline-flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
             >
-              <ChevronLeftIcon
-                className={`w-3 h-3 text-[#fefefe] transition-transform duration-300 ${
-                  collapsed ? "rotate-180" : ""
-                }`}
-              />
+           {isArabic ? (
+  <ChevronRightIcon
+    className={`w-3 h-3 text-[#fefefe] transition-transform duration-300 ${
+      collapsed ? "rotate-180" : ""
+    }`}
+  />
+) : (
+  <ChevronLeftIcon
+    className={`w-3 h-3 text-[#fefefe] transition-transform duration-300 ${
+      collapsed ? "rotate-180" : ""
+    }`}
+  />
+)}
               {!collapsed && (
                 <div className="font-placeholder text-[#fefefe]">
-                  تصغير
+                  {t("collapse")}
                 </div>
               )}
             </button>
@@ -68,7 +79,7 @@ export const NavigationMenuSection = () => {
             {!collapsed && (
               <img
                 className="w-[132px] h-px object-cover"
-                alt="Vector"
+                alt="divider"
                 src="/vector-1.svg"
               />
             )}
@@ -84,32 +95,36 @@ export const NavigationMenuSection = () => {
               <button
                 key={index}
                 onClick={() => navigate(item.path)}
-                className={`flex h-14 items-center justify-center gap-2 p-3 w-full rounded-[10px] cursor-pointer border-none transition-colors duration-300
-                  ${
-                    isActive
-                      ? "bg-[#fefefe] !text-[#835f40]"
-                      : "bg-transparent hover:bg-[#9d7350]"
-                  }`}
+                className={`flex h-14 items-center justify-center gap-2 p-3 w-full rounded-[10px] cursor-pointer border-none transition-colors duration-300 ${
+                  isActive
+                    ? "bg-[#fefefe] !text-[#835f40]"
+                    : "bg-transparent hover:bg-[#9d7350]"
+                }`}
               >
                 <div
-  className={`inline-flex items-center ${
-    collapsed ? "justify-center" : "justify-start"
-  } gap-2 w-full`}
->
+                  className={`inline-flex items-center w-full gap-2 ${
+                    collapsed ? "justify-center" : "justify-start"
+                  }`}
+                >
                   <img
                     className={`w-6 h-6 transition-colors duration-300 ${
-                      isActive ? "filter brightness-0 saturate-100 invert" : ""
+                      isActive
+                        ? "filter brightness-0 saturate-100 invert"
+                        : ""
                     }`}
-                    alt={item.label}
+                    alt={t(item.labelKey)}
                     src={item.icon}
                   />
+
                   {!collapsed && (
                     <div
                       className={`font-h-5 ${
-                        isActive ? "text-[#835f40]" : "text-[#fefefe]"
+                        isActive
+                          ? "text-[#835f40]"
+                          : "text-[#fefefe]"
                       }`}
                     >
-                      {item.label}
+                      {t(item.labelKey)}
                     </div>
                   )}
                 </div>

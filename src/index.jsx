@@ -10,14 +10,23 @@ import { SettingsPage } from "./screens/SettingsPage";
 import { MainProfileScreen } from "./screens/ProfilePage/MainProfileScreen";
 import { ProductPage } from "./screens/ProductsPage/ProductPage.";
 import {AddProduct} from "./screens/ProductsPage/AddProduct"
+import { SignIn } from "./screens/SignIn/SignIn";
+import { Provider } from "react-redux";
+import store from "./Store/Store";
+import { HeroUIProvider } from "@heroui/react";
+import{Register} from "./screens/Register/Register"
+
 import "./i18n";
 
 
 createRoot(document.getElementById("app")).render(
   <StrictMode>
+    <Provider store={store}>
+      
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Screen />} />
+        <Route path="/" element={<SignIn />} />
+        <Route path="/home" element={<Screen />} />
         <Route path="/products" element={<ProductPage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/inventory" element={<InventoryPage />} />
@@ -25,9 +34,13 @@ createRoot(document.getElementById("app")).render(
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/profile" element={<MainProfileScreen />} />
         <Route path="/addProduct" element={<AddProduct />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/register" element={<Register />} />
 
 
       </Routes>
     </BrowserRouter>
+    
+    </Provider>
   </StrictMode>,
 );

@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Button } from "../../components/ui/button";
 import api from "../../Api/Axios";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // import i18n
 
 export const DeleteUserModal = ({ user, onCancel }) => {
+  const { t } = useTranslation(); // i18n hook
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -12,18 +14,17 @@ export const DeleteUserModal = ({ user, onCancel }) => {
     try {
       const response = await api.delete(`/api/vendor/settings/staff/${user.id}`);
       if (response.data.success) {
-        // Navigate to /settings after successful deletion
-        this.onCancel
-        navigate("/settings");
+        navigate(0); // reload page
+        onCancel();
       } else {
         console.error("Failed to delete user:", response.data.message);
+        alert(t("deleteUser.failed") + response.data.message);
       }
     } catch (error) {
-        this.onCancel
       console.error("Failed to delete user:", error);
+      alert(t("deleteUser.error") + error.message);
     } finally {
       setLoading(false);
-        this.onCancel
     }
   };
 
@@ -40,11 +41,11 @@ export const DeleteUserModal = ({ user, onCancel }) => {
           <div className="flex flex-col gap-8 w-full items-center">
             <div className="flex flex-col w-[662px] gap-4 items-center">
               <h1 className="font-semibold text-[#1a1713] text-[30px] leading-10 text-center">
-                هل أنت متأكد أنك تريد حذف العضو "{user?.name}"؟
+                {t("deleteUser.confirmation", { name: user?.name })}
               </h1>
 
               <p className="text-[#4f4f4f] text-center">
-                هل انت متاكد من حذف ذلك العضو ؟ سيتم ازالة جميع بياناته ولن يمكن التراجع عن هذا الاجراء
+                {t("deleteUser.warning")}
               </p>
             </div>
 
@@ -55,7 +56,7 @@ export const DeleteUserModal = ({ user, onCancel }) => {
                 onClick={onCancel}
                 disabled={loading}
               >
-                إلغاء
+                {t("deleteUser.cancel")}
               </Button>
 
               <Button
@@ -64,7 +65,7 @@ export const DeleteUserModal = ({ user, onCancel }) => {
                 onClick={handleDelete}
                 disabled={loading}
               >
-                {loading ? "جاري الحذف..." : "حذف العضو"}
+                {loading ? t("deleteUser.deleting") : t("deleteUser.deleteMember")}
               </Button>
             </div>
           </div>

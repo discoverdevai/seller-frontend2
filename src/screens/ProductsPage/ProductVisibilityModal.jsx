@@ -1,33 +1,41 @@
 import React, { useState } from "react";
-import axios from "../../Api/Axios"; // adjust path if needed
+import axios from "../../Api/Axios";
 import { Button } from "../../components/ui/button";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export const ProductVisibilityModal = ({ product, onCancel }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
-  const handleHideProduct = async () => {
+  const isHidden = product?.isHidden;
+
+  const handleToggleVisibility = async () => {
     if (!product?.id) return;
 
     try {
       setLoading(true);
 
-      const res = await axios.put(
-        `/api/vendor/products/${product.id}/hide`
-      );
+      const endpoint = isHidden
+        ? `/api/vendor/products/${product.id}/unhide`
+        : `/api/vendor/products/${product.id}/hide`;
 
-      // If backend returns { success, message }
+      const res = await axios.put(endpoint);
+
       if (res.data?.success === false) {
         throw new Error(res.data.message);
       }
 
-      toast.success(res.data?.message || "تم إخفاء المنتج بنجاح");
-      alert(res.data?.message || "تم إخفاء المنتج بنجاح")
-      onCancel(true); // close modal
+      toast.success(
+        res.data?.message ||
+          (isHidden ? t("visibility.unhide_success") : t("visibility.hide_success"))
+      );
+
+      onCancel(true); // refresh parent
     } catch (error) {
       console.error(error);
       toast.error(
-        error.response?.data?.message || "حدث خطأ أثناء إخفاء المنتج"
+        error.response?.data?.message || t("visibility.error")
       );
     } finally {
       setLoading(false);
@@ -44,7 +52,7 @@ export const ProductVisibilityModal = ({ product, onCancel }) => {
               {/* IMAGE */}
               <div className="relative w-[350px] h-[350px]">
                 <img
-                  src="/hidden product.png"
+                  src={"/hidden product.png"}
                   alt="visibility"
                   className="w-full h-full object-contain"
                 />
@@ -53,11 +61,15 @@ export const ProductVisibilityModal = ({ product, onCancel }) => {
               {/* TEXT */}
               <div className="flex flex-col gap-4 max-w-[662px] items-center text-center">
                 <h1 className="font-semibold text-[#1a1713] text-[30px] leading-10">
-                  هل أنت متأكد أنك تريد إخفاء المنتج "{product?.name}"؟
+                  {isHidden
+                    ? t("visibility.confirm_unhide", { name: product?.name })
+                    : t("visibility.confirm_hide", { name: product?.name })}
                 </h1>
 
                 <p className="text-[#4f4f4f]">
-                  يمكن إعادة تفعيله في أي وقت من إعدادات المنتج.
+                  {isHidden
+                    ? t("visibility.unhide_warning")
+                    : t("visibility.hide_warning")}
                 </p>
               </div>
 
@@ -66,18 +78,22 @@ export const ProductVisibilityModal = ({ product, onCancel }) => {
                 <Button
                   variant="outline"
                   className="flex-1 h-14 rounded-[10px]"
-                  onClick={onCancel}
+                  onClick={() => onCancel(false)}
                   disabled={loading}
                 >
-                  إلغاء
+                  {t("visibility.cancel")}
                 </Button>
 
                 <Button
                   className="flex-1 h-14 rounded-[10px] bg-[linear-gradient(270deg,rgba(128,91,60,1)_0%,rgba(211,186,164,1)_100%)]"
-                  onClick={handleHideProduct}
+                  onClick={handleToggleVisibility}
                   disabled={loading}
                 >
-                  {loading ? "جارٍ الإخفاء..." : "إخفاء المنتج"}
+                  {loading
+                    ? t("visibility.processing")
+                    : isHidden
+                    ? t("visibility.unhide")
+                    : t("visibility.hide")}
                 </Button>
               </div>
 
