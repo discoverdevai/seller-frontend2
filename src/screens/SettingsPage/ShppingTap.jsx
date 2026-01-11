@@ -14,6 +14,7 @@ import { Button } from "../../components/ui/button";
 import { Switch } from "../../components/ui/switch";
 import api from "../../Api/Axios";
 import { useTranslation } from "react-i18next";
+import { DashboardSkeleton } from "../../components/skeleton";
 
 /* ===============================
    Shipping companies configuration
@@ -39,9 +40,11 @@ export const ShippingTap = () => {
   useEffect(() => {
     const fetchShippingSettings = async () => {
       try {
+         setLoading(true);
         const response = await api.get("/api/vendor/settings/shipping");
-
+         
         if (response.data.success) {
+
           const data = response.data.data;
           setPricingType(data.pricingType ?? "");
           setMinimumFreeShipping(data.minimumFreeShipping ?? "");
@@ -54,9 +57,11 @@ export const ShippingTap = () => {
             }
           );
           setShippingCompanies(mappedCompanies);
+          setLoading(false);
         }
       } catch (error) {
         console.error("Failed to load shipping settings:", error);
+        setLoading(false);
       }
     };
 
@@ -95,6 +100,8 @@ export const ShippingTap = () => {
       setLoading(false);
     }
   };
+
+  if (loading) return <DashboardSkeleton />;
 
   return (
     <div className="bg-[#fefefe] w-full min-h-screen flex">

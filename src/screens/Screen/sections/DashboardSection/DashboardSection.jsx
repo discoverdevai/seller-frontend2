@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState , useMemo } from "react";
 import api from "../../../../Api/Axios"; // axios instance اللي انت عامله
 import { useNavigate } from "react-router-dom";
+import { DashboardSkeleton } from "../../../../components/skeleton";
+
 
 
 
@@ -157,40 +159,6 @@ useEffect(() => {
 
 
 
-//   const statisticsUIMap = {
-//   NEW_ORDERS: {
-//     title: "طلبات جديدة",
-//     unit: "طلب",
-//     bgColor: "bg-[#f4f4f4]",
-//     textColor: "text-[#4f4f4f]",
-//     iconBg: "bg-[#4f4f4f]",
-//     icon: "/mask-group-3.png",
-//   },
-//   ACTIVE_ORDERS: {
-//     title: "طلبات نشطة",
-//     unit: "طلب",
-//     bgColor: "bg-[#fffcf3]",
-//     textColor: "text-[#926e00]",
-//     iconBg: "bg-[#ffc107]",
-//     icon: "/mask-group-5.png",
-//   },
-//   COMPLETED_ORDERS: {
-//     title: "طلبات مكتملة",
-//     unit: "طلب",
-//     bgColor: "bg-emerald-50",
-//     textColor: "text-[#005b10]",
-//     iconBg: "bg-[#005b10]",
-//     icon: "/mask-group-6.png",
-//   },
-//   CANCELLED_ORDERS: {
-//     title: "طلبات ملغاة",
-//     unit: "طلب",
-//     bgColor: "bg-[#fff3f3]",
-//     textColor: "text-[#b90000]",
-//     iconBg: "bg-[#b90000]",
-//     icon: "/mask-group-4.png",
-//   },
-// };
 
 const statisticsUIMap = useMemo(() => ({
   NEW_ORDERS: {
@@ -236,20 +204,15 @@ const statisticsUIMap = useMemo(() => ({
     { label: t("customer_vip"), color: "bg-[#b009b3]" },
   ];
 
-  const yAxisLabels = ["+1000", "+9000", "+8000", "+7000", "+6000", "+5000", "+4000", "+3000", "+2000", "+1000"];
-
-  const xAxisLabels = [
-    t("saturday"),
-    t("friday"),
-    t("thursday"),
-    t("wednesday"),
-    t("tuesday"),
-    t("monday"),
-    t("sunday"),
-  ];
-
+  if (loadingStats) {
+    return <DashboardSkeleton />;
+  }
+  
   return (
+    
     <section className="w-full bg-[#faf9f7] p-6 ">
+      
+    
       <div className="flex flex-col gap-6 max-w-[1179px] mx-auto">
 
         {/* WARNING CARD */}

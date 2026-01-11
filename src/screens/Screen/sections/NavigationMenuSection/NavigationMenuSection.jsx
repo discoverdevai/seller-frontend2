@@ -5,13 +5,44 @@ import { Button } from "../../../../components/ui/button";
 import { useTranslation } from "react-i18next";
 
 const navigationItems = [
-  { labelKey: "home", icon: "/home.svg", path: "/home" },
-  { labelKey: "product", icon: "/mask-group.png", path: "/products" },
-  { labelKey: "orde", icon: "/mask-group-1.png", path: "/orders" },
-  { labelKey: "inventory", icon: "/mask-group-2.png", path: "/inventory" },
-  { labelKey: "analytics", icon: "/chart-1.svg", path: "/analytics" },
-  { labelKey: "settings", icon: "/presention-chart-style7.svg", path: "/settings" },
+  {
+    labelKey: "home",
+    icon: "/home_active.svg",
+    activeIcon: "/home.svg",
+    path: "/home",
+  },
+  {
+    labelKey: "product",
+    icon: "/mask-group.png",
+    activeIcon: "/mask-group_active.png",
+    path: "/products",
+  },
+  {
+    labelKey: "orde",
+    icon: "/mask-group-1.png",
+    activeIcon: "/mask-group-1_active.png",
+    path: "/orders",
+  },
+  {
+    labelKey: "inventor",
+    icon: "/mask-group-2 copy 3.png",
+    activeIcon: "/mask-group-2 copy 2.png",
+    path: "/inventory",
+  },
+  {
+    labelKey: "analytics",
+    icon: "/chart.svg",
+    activeIcon: "/chart-active.svg",
+    path: "/analytics",
+  },
+  {
+    labelKey: "settings",
+    icon: "/presention-chart-style7.svg",
+    activeIcon: "/presention-chart-style7_active.svg",
+    path: "/settings",
+  },
 ];
+
 
 export const NavigationMenuSection = () => {
   const {i18n, t } = useTranslation();
@@ -107,13 +138,10 @@ const isArabic = i18n.language === "ar";
                   }`}
                 >
                   <img
-                    className={`w-6 h-6 transition-colors duration-300 ${
-                      isActive
-                        ? "filter brightness-0 saturate-100 invert"
-                        : ""
+                    className={`w-6 h-6 transition-colors duration-300 
                     }`}
                     alt={t(item.labelKey)}
-                    src={item.icon}
+                     src={isActive ? item.activeIcon : item.icon}
                   />
 
                   {!collapsed && (

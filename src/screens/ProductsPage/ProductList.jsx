@@ -24,6 +24,7 @@ import { ProductDetailsModal } from "./ProductDetailsModal";
 import{ProductVisibilityModal} from "./ProductVisibilityModal"
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { DashboardSkeleton } from "../../components/skeleton";
 
 
 
@@ -70,7 +71,7 @@ const statisticsUIMap = useMemo(() => ({
         bgColor: "bg-[#f3f5fe]",
         textColor: "text-[#0b27a5]",
         iconBg: "bg-[#0b27a5]",
-        icon: "/mask-group-7.png",
+        icon: "/mask-group-6 copy.png",
       },
       AVAILABLE_PRODUCTS: {
         title: t("statistics.available"),
@@ -113,6 +114,25 @@ const statisticsUIMap = useMemo(() => ({
 ;
 };
 
+const filterColumns = [
+  { key: "name", label: t("products.table.name") },
+  { key: "id", label: t("products.table.sku") },
+  { key: "category", label: t("products.table.category") },
+  { key: "status", label: t("products.table.status") },
+  { key: "quantity", label: t("products.table.quantity") },
+];
+const [activeColumns, setActiveColumns] = useState(
+  filterColumns.map((c) => c.key) // all enabled by default
+);
+const toggleColumn = (key) => {
+  setActiveColumns((prev) =>
+    prev.includes(key)
+      ? prev.filter((c) => c !== key)
+      : [...prev, key]
+  );
+};
+
+
 useEffect(() => {
 
   const fetchStatistics = async () => {
@@ -144,6 +164,8 @@ useEffect(() => {
 
 
   const [statsCards, setStatsCards] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
 const [loadingStats, setLoadingStats] = useState(true);
     const navigate = useNavigate();
 
@@ -155,6 +177,8 @@ const [productToDelete, setProductToDelete] = useState(null);
 
 const [isVisibilityOpen, setIsVisibilityOpen] = useState(false);
 const [productToToggleVisibility, setProductToToggleVisibility] = useState(null);
+const [filterOpen, setFilterOpen] = useState(false);
+
 
 
 
@@ -163,6 +187,25 @@ const closeModal = () => {
     setSelectedProduct(null);
   };
 
+  const filteredProducts = useMemo(() => {
+  if (!searchTerm.trim()) return products;
+
+  const lowerSearch = searchTerm.toLowerCase();
+
+  return products.filter((product) =>
+    activeColumns.some((key) =>
+      String(product[key] ?? "")
+        .toLowerCase()
+        .includes(lowerSearch)
+    )
+  );
+}, [products, searchTerm, activeColumns]);
+
+
+
+  if (loadingStats) {
+    return <DashboardSkeleton />;
+  }
   return (
     
     // <Layout>
@@ -225,25 +268,122 @@ const closeModal = () => {
                   {t("products.addNew")}
                   </Button>
 
-                  <div className="flex items-center gap-3">
-                    <img
-                      className="w-14"
-                      alt="Frame"
-                      src="/frame-1984081823.svg"
-                    />
+              <div className="flex items-center gap-3 relative">
 
-                    <div className="flex items-center gap-2 px-3 py-4 rounded-[10px] border border-solid border-[#c3c3c3] w-[501px]">
-                      <SearchIcon className="w-6 h-6" />
-                      <Input
-                        placeholder={t("products.search")}
-                        className="border-0 font-[number:var(--placeholder-font-weight)] text-[#4f4f4f] text-[length:var(--placeholder-font-size)] leading-[var(--placeholder-line-height)] font-placeholder tracking-[var(--placeholder-letter-spacing)] [font-style:var(--placeholder-font-style)] focus-visible:ring-0 focus-visible:ring-offset-0"
-                      />
-                    </div>
-                  </div>
+  {/* ================= FILTER DROPDOWN ================= */}
+  {filterOpen && (
+    <div className="absolute top-16 right-0 bg-white rounded-2xl shadow-xl border border-[#f1f2f4] p-4 w-64 z-50 animate-in fade-in zoom-in-95">
+      
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="text-sm font-semibold text-[#1a1713]">
+          {t("products.filterBy")}
+        </h4>
+
+        <span className="text-xs text-[#805b3c] font-medium">
+          {activeColumns.length} {t("products.selected")}
+        </span>
+      </div>
+
+      <div className="h-px bg-[#f1f2f4] mb-3" />
+
+      {/* Columns */}
+      <div className="flex flex-col gap-2">
+        {filterColumns.map((col) => {
+          const checked = activeColumns.includes(col.key);
+
+          return (
+            <label
+              key={col.key}
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition
+                ${checked ? "bg-[#faf7f4]" : "hover:bg-[#fafafa]"}
+              `}
+            >
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={() => toggleColumn(col.key)}
+                className="accent-[#805b3c] w-4 h-4"
+              />
+              <span className="text-sm text-[#1a1713]">
+                {col.label}
+              </span>
+            </label>
+          );
+        })}
+      </div>
+
+      {/* Footer */}
+      <div className="flex justify-between items-center mt-4">
+        <button
+          onClick={() => setActiveColumns(filterColumns.map(c => c.key))}
+          className="text-xs text-[#805b3c] hover:underline"
+        >
+          {t("products.selectAll")}
+        </button>
+
+        <button
+          onClick={() => setActiveColumns([])}
+          className="text-xs text-[#b90000] hover:underline"
+        >
+          {t("products.clear")}
+        </button>
+      </div>
+
+    </div>
+  )}
+
+  {/* ================= FILTER ICON ================= */}
+  <button
+    onClick={() => setFilterOpen((prev) => !prev)}
+    className={`relative rounded-xl transition p-1
+      ${filterOpen || activeColumns.length !== filterColumns.length
+        ? "bg-[#faf7f4]"
+        : "hover:bg-[#f4f4f4]"
+      }
+    `}
+  >
+    <img
+      className="w-12"
+      alt="Filter"
+      src="/frame-1984081823.svg"
+    />
+
+    {/* Active filters badge */}
+    {activeColumns.length !== filterColumns.length && (
+      <span className="absolute -top-1 -right-1 bg-[#805b3c] text-white text-[10px] rounded-full px-2 py-[2px]">
+        {activeColumns.length}
+      </span>
+    )}
+  </button>
+
+  {/* ================= SEARCH INPUT ================= */}
+  <div className="flex items-center gap-2 px-4 py-3 rounded-[12px] border border-[#c3c3c3] w-[501px] bg-white focus-within:border-[#805b3c] transition">
+    <SearchIcon className="w-5 h-5 text-[#4f4f4f]" />
+    <Input
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      placeholder={t("products.search")}
+      className="border-0 p-0 text-[#1a1713] placeholder:text-[#9a9a9a] focus-visible:ring-0 focus-visible:ring-offset-0"
+    />
+  </div>
+
+</div>
+
                 </div>
 
                 <div className="flex flex-col">
                   <Table>
+                    {filteredProducts.length === 0 && (
+  <TableRow>
+    <TableCell
+      colSpan={headers.length}
+      className="text-center text-gray-500 h-24"
+    >
+      {t("products.noResults")}
+    </TableCell>
+  </TableRow>
+)}
                     <TableHeader>
                       <TableRow className="border-0">
                         {headers.map((header, index) => (
@@ -265,7 +405,7 @@ const closeModal = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {products.map((row, rowIndex) => (
+                      {filteredProducts.map((row, rowIndex) => (
                         <TableRow
                           key={rowIndex}
                           className={`border-0 ${row.isHidden ? "opacity-50" : ""}`}

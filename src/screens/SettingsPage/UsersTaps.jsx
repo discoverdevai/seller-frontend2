@@ -5,6 +5,7 @@ import { AddMemberModal } from "./AddUserModal";
 import { DeleteUserModal } from "./DeleteUserModal";
 import api from "../../Api/Axios";
 import { useTranslation } from "react-i18next";
+import { DashboardSkeleton } from "../../components/skeleton";
 
 export const UsersTabs = () => {
   const { t } = useTranslation();
@@ -67,7 +68,7 @@ export const UsersTabs = () => {
     setShowAddMember(true);
   };
 
-  if (loading) return <div>{t("loadingTeamMembers")}</div>;
+  if (loading) return <DashboardSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 w-full ">

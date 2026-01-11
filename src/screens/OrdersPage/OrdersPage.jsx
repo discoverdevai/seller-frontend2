@@ -1,42 +1,20 @@
-import React, { useState, useEffect } from "react";
-import api from "../../Api/Axios";
+import React, { useState, useEffect, useMemo } from "react";
 import { Layout } from "../../components/Layout";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
-import { Table , TableBody , TableFooter ,TableCaption,TableHeader , TableCell ,TableRow , TableHead } from "../../components/ui/table";
+import { Input } from "../../components/ui/input";
 import {
-  BellIcon,
-  CalendarIcon,
-  Edit2Icon,
-  EyeIcon,
   SearchIcon,
   SlidersHorizontalIcon,
-  UserIcon,
+  CalendarIcon,
+  EyeIcon,
 } from "lucide-react";
-
+import api from "../../Api/Axios";
 import { useTranslation } from "react-i18next";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { DashboardSkeleton } from "../../components/skeleton";
 import { OrderDetailsModal } from "./OrderDetailsModal";
-
-
-// ... Badge, Button, Table components, Tabs, TabsTrigger remain the same
-
-const navigationItems = [
-  { icon: "/home.svg", alt: "Home" },
-  { icon: "/mask-group.png", alt: "Mask group" },
-  { icon: "/mask-group-1.png", alt: "Mask group" },
-  { icon: "/mask-group-2.png", alt: "Mask group", active: true },
-  { icon: "/chart.svg", alt: "Chart" },
-  { icon: "/presention-chart-style7.svg", alt: "Presention chart" },
-];
-
-const tabItems = [
-  { label: "orders_tabs_all", value: "all" },
-  { label: "orders_tabs_new", value: "new" },
-  { label: "orders_tabs_preparing", value: "preparing" },
-  { label: "orders_tabs_shipping", value: "shipping" },
-  { label: "orders_tabs_completed", value: "completed" },
-  { label: "orders_tabs_cancelled", value: "cancelled" },
-];
 
 const tableHeaders = [
   "orders_th_id",
@@ -48,35 +26,21 @@ const tableHeaders = [
   "orders_th_actions",
 ];
 
-// Tabs components (place this at the top of the file, after imports)
-function Tabs({ defaultValue, children }) {
-  const [active, setActive] = useState(defaultValue);
-  return React.Children.map(children, (child) =>
-    React.cloneElement(child, { activeTab: active, setActiveTab: setActive })
-  );
-}
+const filterColumns = [
+  { key: "id", label: "filters.id" },
+  { key: "customer", label: "filters.customer" },
+  { key: "date", label: "filters.date" },
+  { key: "payment", label: "filters.payment" },
+  { key: "total", label: "filters.total" },
+  { key: "status", label: "filters.status" },
+];
 
-function TabsList({ children }) {
-  return <div className="flex gap-3">{children}</div>;
-}
 
-function TabsTrigger({ value, children, activeTab, setActiveTab, className }) {
-  const isActive = activeTab === value;
-  return (
-    <div
-      onClick={() => setActiveTab(value)}
-      className={`${className} cursor-pointer ${isActive ? "border-b-2 border-[#835f40]" : ""}`}
-    >
-      {children}
-    </div>
-  );
-}
-
- const initialOrders = [
+const initialOrders = [
   {
     id: "ORD-00001",
     customer: "أحمد علي",
-    date: "01-01-2026",
+    date: "2026-01-01",
     payment: "VISA",
     total: "1000 ر.س",
     status: "تم الاستلام",
@@ -85,7 +49,7 @@ function TabsTrigger({ value, children, activeTab, setActiveTab, className }) {
   {
     id: "ORD-00002",
     customer: "محمد حسن",
-    date: "02-01-2026",
+    date: "2026-01-02",
     payment: "MasterCard",
     total: "2000 ر.س",
     status: "جاري التجهيز",
@@ -94,7 +58,7 @@ function TabsTrigger({ value, children, activeTab, setActiveTab, className }) {
   {
     id: "ORD-00003",
     customer: "سارة محمد",
-    date: "03-01-2026",
+    date: "2026-01-03",
     payment: "STC Pay",
     total: "1500 ر.س",
     status: "تم التوصيل",
@@ -102,29 +66,36 @@ function TabsTrigger({ value, children, activeTab, setActiveTab, className }) {
   },
 ];
 
-
 export const OrdersPage = () => {
   const { t } = useTranslation();
- 
-
 
   const [orders, setOrders] = useState(initialOrders);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [activeColumns, setActiveColumns] = useState(
+    filterColumns.map((c) => c.key)
+  );
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  // Fetch orders from API
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const response = await api.get("/api/vendor/orders");
         if (response.data.success && response.data.data.orders) {
-          // Map API response to table structure
           const mappedOrders = response.data.data.orders.map((o) => ({
             id: o.orderNumber,
             customer: o.customerName,
-            date: new Date(o.submissionDate).toLocaleDateString("ar-EG"), // Format date
+            date: new Date(o.submissionDate).toISOString().split("T")[0],
             payment: o.paymentWay,
-            total: `${o.totalCost.toLocaleString()} `,
+            total: `${o.totalCost.toLocaleString()} ر.س`,
             status: o.state,
             statusColor: getStatusColor(o.state),
           }));
@@ -136,11 +107,10 @@ export const OrdersPage = () => {
         setLoading(false);
       }
     };
-
     fetchOrders();
   }, []);
 
-  // Function to map order state to badge color
+  // Map status to badge colors
   const getStatusColor = (status) => {
     switch (status) {
       case "تم الاستلام":
@@ -160,115 +130,222 @@ export const OrdersPage = () => {
     }
   };
 
+  // Filtered orders based on search, active columns, and date range
+  const filteredOrders = useMemo(() => {
+    return orders.filter((order) => {
+      // Column search
+      const matchesSearch = activeColumns.some((colKey) => {
+        const value = order[colKey]?.toString() || "";
+        return value.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+      if (!matchesSearch) return false;
+
+      // Date filter
+      if (startDate && endDate) {
+        const orderDate = new Date(order.date);
+        if (orderDate < startDate || orderDate > endDate) return false;
+      }
+
+      return true;
+    });
+  }, [orders, searchTerm, activeColumns, startDate, endDate]);
+
+  if (loading)
+    return (
+      <Layout>
+        <DashboardSkeleton />
+      </Layout>
+    );
+
   return (
     <Layout>
       <div className="flex min-h-screen bg-white">
-        <main className="flex-1 flex flex-col">
-          {/* Tabs */}
-          <div className="bg-[#faf9f7] h-[58px] flex items-center justify-start px-6">
-            <Tabs defaultValue="all">
-              <TabsList>
-                {tabItems.map((tab) => (
-                  <TabsTrigger key={tab.value} value={tab.value} className="flex flex-col items-center gap-0.5">
-                    <div className="p-2"> {t(tab.label)}</div>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          </div>
-
-          {/* Orders Table */}
-          <div className="flex flex-col gap-8 p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-6 px-3 py-4 rounded-[10px] border border-solid border-[#c3c3c3] w-[501px]">
-                  <SearchIcon className="w-6 h-6" />
-                  <div className="flex items-center gap-2">
-                    <div className="font-[number:var(--placeholder-font-weight)] text-[#4f4f4f] text-[length:var(--placeholder-font-size)] leading-[var(--placeholder-line-height)] font-placeholder tracking-[var(--placeholder-letter-spacing)] whitespace-nowrap">
-                      {t("orders_search_placeholder")}
-                    </div>
-                  </div>
-                </div>
-                <Button variant="outline" size="icon" className="w-14 h-14 rounded-[10px]">
-                  <SlidersHorizontalIcon className="w-6 h-6" />
-                </Button>
-              </div>
-              <div className="flex items-center gap-6 px-3 py-4 rounded-[10px] border border-solid border-[#c3c3c3] w-[269px]">
-                <div className="flex items-center gap-2">
-                  <div className="font-[number:var(--h-5-font-weight)] text-[#1a1713] text-[length:var(--h-5-font-size)] leading-[var(--h-5-line-height)] font-h-5 tracking-[var(--h-5-letter-spacing)] whitespace-nowrap">
-                    {t("orders_date_label")}
-                  </div>
-                  <CalendarIcon className="w-6 h-6" />
-                </div>
-              </div>
+        <main className="flex-1 flex flex-col p-6 gap-6">
+          {/* ================= SEARCH & FILTER ================= */}
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-3 px-3 py-4 rounded-[10px] border border-solid border-[#c3c3c3] w-[500px]">
+              <SearchIcon className="w-6 h-6" />
+              <Input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder={t("orders_search_placeholder")}
+                className="border-0 text-sm w-full"
+              />
             </div>
 
-          {loading ? (
-  <div>Loading orders...</div>
-) : orders.length === 0 ? (
-  <div className="text-center text-gray-500 py-8">
-    {t("orders_no_orders_message") || "لا توجد طلبات للعرض"}
-  </div>
-) : (
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-[#f3f3f3]">
-                    {tableHeaders.map((header, index) => (
-                      <TableHead key={index} className="h-12 text-center border-l border-[#f1f2f4]">
+            {/* Filter dropdown */}
+            <div className="relative">
+              {filterOpen && (
+                <div className="absolute top-16 right-0 bg-white rounded-2xl shadow-xl border border-[#f1f2f4] p-4 w-64 z-50 animate-in fade-in zoom-in-95">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-semibold text-[#1a1713]">
+                      {t("products.filterBy")}
+                    </h4>
+                    <span className="text-xs text-[#805b3c] font-medium">
+                      {activeColumns.length} {t("products.selected")}
+                    </span>
+                  </div>
+                  <div className="h-px bg-[#f1f2f4] mb-3" />
+                  <div className="flex flex-col gap-2">
+                    {filterColumns.map((col) => {
+                      const checked = activeColumns.includes(col.key);
+                      return (
+                        <label
+                          key={col.key}
+                          className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition
+                          ${checked ? "bg-[#faf7f4]" : "hover:bg-[#fafafa]"}`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => {
+                              if (checked) {
+                                setActiveColumns((prev) =>
+                                  prev.filter((c) => c !== col.key)
+                                );
+                              } else {
+                                setActiveColumns((prev) => [...prev, col.key]);
+                              }
+                            }}
+                            className="accent-[#805b3c] w-4 h-4"
+                          />
+                          <span className="text-sm text-[#1a1713]">
+                            {t(col.label)}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                    <button
+                      onClick={() =>
+                        setActiveColumns(filterColumns.map((c) => c.key))
+                      }
+                      className="text-xs text-[#805b3c] hover:underline"
+                    >
+                      {t("products.selectAll")}
+                    </button>
+                    <button
+                      onClick={() => setActiveColumns([])}
+                      className="text-xs text-[#b90000] hover:underline"
+                    >
+                      {t("products.clear")}
+                    </button>
+                  </div>
+                </div>
+              )}
+              <Button
+                variant="outline"
+                size="icon"
+                className={`w-14 h-14 rounded-[10px] relative ${
+                  filterOpen || activeColumns.length !== filterColumns.length
+                    ? "bg-[#faf7f4]"
+                    : "hover:bg-[#f4f4f4]"
+                }`}
+                onClick={() => setFilterOpen((prev) => !prev)}
+              >
+                <img
+                  className="w-12"
+                  alt="Filter"
+                  src="/frame-1984081823.svg"
+                />
+                {activeColumns.length !== filterColumns.length && (
+                  <span className="absolute -top-1 -right-1 bg-[#805b3c] text-white text-[10px] rounded-full px-2 py-[2px]">
+                    {activeColumns.length}
+                  </span>
+                )}
+              </Button>
+            </div>
+
+            {/* Date picker */}
+            <div className="flex items-center gap-2 px-3 py-4 rounded-[10px] border border-solid border-[#c3c3c3] w-[300px]">
+              <CalendarIcon className="w-6 h-6" />
+              <DatePicker
+                selected={startDate}
+                onChange={(dates) => {
+                  const [start, end] = dates;
+                  setStartDate(start);
+                  setEndDate(end);
+                }}
+                startDate={startDate}
+                endDate={endDate}
+                selectsRange
+                isClearable
+                placeholderText={t("orders_date_label")}
+                className="w-full border-0 text-sm"
+              />
+            </div>
+          </div>
+
+          {/* ================= ORDERS TABLE ================= */}
+          {filteredOrders.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">
+              {t("orders_no_orders_message") || "لا توجد طلبات للعرض"}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead className="bg-[#f3f3f3]">
+                  <tr>
+                    {tableHeaders.map((header, idx) => (
+                      <th
+                        key={idx}
+                        className="h-12 text-center border-l border-[#f1f2f4]"
+                      >
                         {t(header)}
-                      </TableHead>
+                      </th>
                     ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  
-                  {orders.map((order, index) => (
-                    <TableRow key={index} className={index % 2 === 1 ? "bg-[#f2f2f2]" : ""}>
-                      <TableCell className="h-14 text-center border border-[#f1f2f4]">{order.id}</TableCell>
-                      <TableCell className="h-14 text-center border border-[#f1f2f4]">{order.customer}</TableCell>
-                      <TableCell className="h-14 text-center border border-[#f1f2f4]">{order.date}</TableCell>
-                      <TableCell className="h-14 text-center border border-[#f1f2f4]">{order.payment}</TableCell>
-                      <TableCell className="h-14 text-center border border-[#f1f2f4]">{order.total}</TableCell>
-                      <TableCell className="h-14 text-center border border-[#f1f2f4]">
-                        <Badge className={`${order.statusColor} h-8 px-2 py-2 rounded-[10px]`}>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredOrders.map((order, idx) => (
+                    <tr
+                      key={idx}
+                      className={idx % 2 === 1 ? "bg-[#f2f2f2]" : ""}
+                    >
+                      <td className="h-14 text-center border">{order.id}</td>
+                      <td className="h-14 text-center border">{order.customer}</td>
+                      <td className="h-14 text-center border">{order.date}</td>
+                      <td className="h-14 text-center border">{order.payment}</td>
+                      <td className="h-14 text-center border">{order.total}</td>
+                      <td className="h-14 text-center border">
+                        <Badge
+                          className={`${order.statusColor} h-8 px-2 py-2 rounded-[10px]`}
+                        >
                           {order.status}
                         </Badge>
-                      </TableCell>
-                      <TableCell className="h-14 text-center border border-[#f1f2f4]">
-                        <div className="flex items-center justify-center gap-4">
-                          <Button
-                            onClick={() => {
-                              setSelectedOrder(order);
-                              setIsDetailsOpen(true);
-                            }}
-                            variant="ghost"
-                            size="sm"
-                          >
-                            <EyeIcon className="w-6 h-6" /> {t("orders_action_view")}
-                          </Button>
-                          {/* <Button variant="ghost" size="sm">
-                            <Edit2Icon className="w-6 h-6" /> {t("orders_action_edit")}
-                          </Button> */}
-                        </div>
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                      <td className="h-14 text-center border">
+                        <Button
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setIsDetailsOpen(true);
+                          }}
+                          variant="ghost"
+                          size="sm"
+                        >
+                          <EyeIcon className="w-6 h-6" /> {t("orders_action_view")}
+                        </Button>
+                      </td>
+                    </tr>
                   ))}
-                </TableBody>
-              </Table>
-            )}
-          </div>
+                </tbody>
+              </table>
+            </div>
+          )}
         </main>
-      </div>
 
-      {isDetailsOpen && selectedOrder && (
-        <OrderDetailsModal
-          order={selectedOrder}
-          onClose={() => {
-            setIsDetailsOpen(false);
-            setSelectedOrder(null);
-          }}
-        />
-      )}
+        {/* Order Details Modal */}
+        {isDetailsOpen && selectedOrder && (
+          <OrderDetailsModal
+            order={selectedOrder}
+            onClose={() => {
+              setIsDetailsOpen(false);
+              setSelectedOrder(null);
+            }}
+          />
+        )}
+      </div>
     </Layout>
   );
 };

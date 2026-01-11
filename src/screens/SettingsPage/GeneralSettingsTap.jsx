@@ -4,6 +4,7 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { Button } from "../../components/ui/button";
 import { useTranslation } from "react-i18next";
+import { DashboardSkeleton } from "../../components/skeleton";
 
 const contactFields = [
   { key: "mobileNumber", labelKey: "general.mobileNumber", type: "phone" },
@@ -58,7 +59,7 @@ export const GeneralSettingsTab = () => {
     }
   };
 
-  if (loading) return <div>{t("general.loadingSettings")}</div>;
+  if (loading) return <DashboardSkeleton />;
   if (!settings) return <div>{t("general.unableToLoadSettings")}</div>;
 
   return (

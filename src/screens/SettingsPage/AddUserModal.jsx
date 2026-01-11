@@ -5,6 +5,8 @@ import { Label } from "../../components/ui/label";
 import api from "../../Api/Axios";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next"; // import i18n
+import toast from "react-hot-toast";
+
 
 export const AddMemberModal = ({ onClose, user }) => {
   const { t } = useTranslation();
@@ -41,40 +43,46 @@ export const AddMemberModal = ({ onClose, user }) => {
   }, [user]);
 
   const handleSave = async () => {
-    setLoading(true);
-    try {
-      if (isEdit) {
-        const res = await api.put(
-          `/api/vendor/settings/staff/${user.id}/role`,
-          null,
-          { params: { role } }
-        );
-        if (res.data?.success) {
-          onClose();
-          navigate(0);
-        }
+  setLoading(true);
+  try {
+    if (isEdit) {
+      const res = await api.put(
+        `/api/vendor/settings/staff/${user.id}/role`,
+        null,
+        { params: { role } }
+      );
+      if (res.data?.success) {
+        toast.success(t("addMember.saveSuccess")); // ✅ success toast
+        onClose();
+        navigate(0);
       } else {
-        const res = await api.post("/api/vendor/settings/staff/create", {
-          username,
-          password,
-          email,
-          firstName,
-          lastName,
-          phoneNumber,
-          role,
-        });
-        if (res.data?.success) {
-          onClose();
-          navigate(0);
-        }
+        toast.error(t("addMember.saveFailed")); // ✅ failed toast
       }
-    } catch (e) {
-      console.error(e);
-      alert(isEdit ? t("addMember.saveFailed") : t("addMember.createFailed"));
-    } finally {
-      setLoading(false);
+    } else {
+      const res = await api.post("/api/vendor/settings/staff/create", {
+        username,
+        password,
+        email,
+        firstName,
+        lastName,
+        phoneNumber,
+        role,
+      });
+      if (res.data?.success) {
+        toast.success(t("addMember.createSuccess")); // ✅ success toast
+        onClose();
+        navigate(0);
+      } else {
+        toast.error(t("addMember.createFailed")); // ✅ failed toast
+      }
     }
-  };
+  } catch (e) {
+    console.error(e);
+    toast.error(isEdit ? t("addMember.saveFailed") : t("addMember.createFailed"));
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

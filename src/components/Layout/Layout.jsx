@@ -36,14 +36,14 @@ export const Layout = ({ children }) => {
           <div className="flex w-full max-w-[1227px] h-full items-center justify-between px-12">
             
             {/* Search */}
-            <div className="flex w-full max-w-[812px] items-center gap-2 px-3 py-4 rounded-[10px] border border-solid border-[#c3c3c3]">
+            {/* <div className="flex w-full max-w-[812px] items-center gap-2 px-3 py-4 rounded-[10px] border border-solid border-[#c3c3c3]">
               <SearchIcon className="w-6 h-6 text-[#4f4f4f]" />
               <Input
                 type="text"
                 placeholder={isArabic ? "البحث" : "Search"}
                 className="border-0 bg-transparent text-[#4f4f4f] focus-visible:ring-0 focus-visible:ring-offset-0"
               />
-            </div>
+            </div> */}
 
             {/* Icons */}
             <div className="inline-flex items-center justify-start gap-6">

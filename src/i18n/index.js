@@ -7,7 +7,7 @@ const resources = {
  home: "الرئيسية",
           product: "المنتجات",
           orde: "الطلبات",
-          inventory: "المخزون",
+          inventor: "المخزون",
           analytics: "التحليلات",
           settings: "إعدادات المتجر",
           logo: "اللوجو",
@@ -136,7 +136,7 @@ const resources = {
       // order_canceled_title: "طلبات ملغاة",
 
       // Dashboard - Low Stock
-      low_stock_title: "المنتجات منخفضة المخزون",
+      low_stock_title: " منخفضة المخزون",
       low_stock_message:
         "لديك 5 منتجات أوشكت على النفاد، يرجى تحديث المخزون لتجنب فقدان المبيعات.",
       low_stock_button: "عرض المنتجات",
@@ -242,7 +242,7 @@ const resources = {
 
       // Alert Card
       analytics_alert_title: "تنبيه",
-      analytics_low_stock_title: "المنتجات منخفضة المخزون",
+      analytics_low_stock_title: "منخفضة المخزون",
       analytics_low_stock_message: "لديك 5 منتجات أوشكت على النفاد، يرجى تحديث المخزون لتجنب فقدان المبيعات.",
       analytics_view_products_button: "عرض المنتجات",
 
@@ -289,6 +289,13 @@ const resources = {
     "loading": "جاري التحميل..."
   },
   "products": {
+    "selected": "تم الاختيار",
+    "clear": "مسح الفلاتر",
+    "filterBy": "تصفية الأعمدة",
+    "showColumns": "إظهار الأعمدة",
+    "search": "ابحث عن المنتجات...",
+    "selectAll": "تحديد الكل",
+    "clearAll": "إلغاء التحديد",
     "title": "المنتجات",
     "addNew": "إضافة منتج جديد",
     "basicInfo": "البيانات الأساسية",
@@ -339,7 +346,7 @@ const resources = {
    "statistics": {
     "all": "كل المنتجات",
     "available": "المنتجات المتاحة",
-    "lowStock": "منتجات منخفضة المخزون",
+    "lowStock": " منخفضة المخزون",
     "notAvailable": "غير متاح",
     "hidden": "مخفية",
     "unit": "منتج"
@@ -494,7 +501,128 @@ const resources = {
     "saveChanges": "حفظ التعديلات",
     "saving": "جاري الحفظ...",
     "saveFailed": "فشل حفظ التعديلات",
-    "createFailed": "فشل إنشاء العضو الجديد"
+    "createFailed": "فشل إنشاء العضو الجديد",
+      "saveSuccess": "تم تحديث العضو بنجاح!",
+    "createSuccess": "تم إنشاء العضو بنجاح!",
+    "saveFailed": "فشل تحديث العضو.",
+    "createFailed": "فشل إنشاء العضو."
+  },
+  "inventory": {
+    "title": "المخزون",
+    "loadingStats": "جاري تحميل الإحصائيات...",
+    "addProduct": "إضافة منتج جديد",
+    "search": "البحث",
+
+    "unit": {
+      "product": "منتج"
+    },
+
+    "stats": {
+      "allProducts": "إجمالي المنتجات",
+      "availableProducts": "المنتجات المتوفرة",
+      "lowStockProducts": "منخفضة المخزون",
+      "notAvailableProducts": "غير المتوفرة",
+      "hiddenProducts": "منتجات مخفية"
+    },
+
+    "table": {
+      "productImage": "صورة المنتج",
+      "productName": "اسم المنتج",
+      "productCode": "الرمز التعريفي",
+      "category": "الفئة",
+      "quantity": "الكمية الحالية",
+      "minStock": "الحد الأدنى",
+      "status": "الحالة",
+      "lastUpdate": "آخر تعديل",
+      "restockSuggestion": "اقتراح إعادة التخزين"
+    },
+
+    "status": {
+      "available": "متوفر",
+      "lowStock": "منخفض",
+      "outOfStock": "غير متوفر",
+      "hidden": "مخفي"
+    },
+
+    "suggestion": {
+      "available": "المنتج متوفر",
+      "lowStock": "أضف كمية للمخزون",
+      "outOfStock": "المنتج غير متوفر حاليًا",
+      "hidden": "المنتج مخفي من قبل المتجر"
+    }
+  },
+  "editProfile": {
+    "storeName": "اسم المتجر",
+    "mobileNumber": "رقم الجوال",
+    "save": "حفظ",
+    "saving": "جاري الحفظ...",
+    "loading": "جاري تحميل البيانات...",
+    "loadError": "تعذر تحميل البيانات",
+    "alert": {
+      "success": "تم تحديث الملف الشخصي بنجاح",
+      "fail": "فشل تحديث البيانات",
+      "error": "حدث خطأ أثناء حفظ البيانات"
+    }
+  },
+   "notifications": {
+    "type": "نوع التنبيه",
+    "dashboard": "داخل الداشبورد",
+    "sms": "رسائل الجوال \"SMS\"",
+    "save": "حفظ",
+    "notification": {
+      "newOrder": "تنبيهات عند استلام طلب جديد",
+      "statusChange": "إشعار عند تغيير حالة الطلب",
+      "orderCanceled": "إشعار عند إلغاء الطلب",
+      "lowStockProduct": "تنبيه عند انخفاض كمية منتج",
+      "outOfStock": "إشعار عند نفاد المخزون",
+      "newReview": "إشعار عند إضافة تقييم جديد"
+    }
+  },
+   "changePassword": {
+    "newPassword": "كلمة المرور",
+    "newPasswordPlaceholder": "ادخل كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "confirmPasswordPlaceholder": "اعد إدخال كلمة المرور",
+    "save": "حفظ",
+    "saving": "جاري الحفظ...",
+    "errorTitle": "خطأ",
+    "fillFields": "الرجاء ملء الحقول",
+    "passwordMismatch": "كلمة المرور وتأكيد كلمة المرور غير متطابقين",
+    "updateFailed": "فشل تغيير كلمة المرور",
+    "updateError": "حدث خطأ أثناء تغيير كلمة المرور"
+  },
+  "logOutModal": {
+    "iconAlt": "رمز تسجيل الخروج",
+    "confirmTitle": "تأكيد تسجيل الخروج",
+    "confirmMessage": "هل أنت متأكد أنك تريد تسجيل الخروج من الحساب؟",
+    "cancel": "إلغاء",
+    "logout": "تسجيل الخروج"
+  },
+    "profileTabs": {
+    "editProfile": "تعديل الملف الشخصي",
+    "notifications": "التنبيهات",
+    "changePassword": "تغيير كلمة المرور",
+    "logout": "تسجيل الخروج"
+  },
+  "orders_search_placeholder": "ابحث في الطلبات...",
+  "orders_date_label": "اختر نطاق التاريخ",
+  "orders_no_orders_message": "لا توجد طلبات للعرض",
+  "orders_th_id": "رقم الطلب",
+  "orders_th_customer": "العميل",
+  "orders_th_date": "التاريخ",
+  "orders_th_payment": "طريقة الدفع",
+  "orders_th_total": "المجموع",
+  "orders_th_status": "الحالة",
+  "orders_th_actions": "الإجراءات",
+  "orders_action_view": "عرض",
+
+  "filters": {
+    "id": "رقم الطلب",
+    "customer": "العميل",
+    "date": "التاريخ",
+    "payment": "طريقة الدفع",
+    "total": "المجموع",
+    "status": "الحالة"
   }
 
     },
@@ -505,7 +633,7 @@ const resources = {
         home: "Home",
           product: "Products",
           orde: "Orders",
-          inventory: "Inventory",
+          inventor: "Inventory",
           analytics: "Analytics",
           settings: "Store Settings",
           logo: "Logo",
@@ -626,7 +754,7 @@ const resources = {
       hidden_products_title: "Hidden",
 
       // Dashboard - Low Stock
-      low_stock_title: "Low Stock Products",
+      low_stock_title: "Low Stock",
       low_stock_message_with_count: " You have {{count}} products that are almost out of stock. Please update inventory to avoid losing sales.",
 
       low_stock_message:
@@ -706,7 +834,7 @@ const resources = {
 
       // Stats Cards
       inventory_total_products: "Total Products",
-      inventory_available_products: "Available Products",
+      inventory_available_products: "Available ",
       inventory_low_stock: "Low Stock",
       inventory_out_of_stock: "Out of Stock",
       inventory_hidden_products: "Hidden Products",
@@ -781,6 +909,13 @@ const resources = {
     "loading": "Loading..."
   },
   "products": {
+    "selected": "selected",
+    "clear": "Clear filters",
+    "filterBy": "Filter columns",
+    "showColumns": "Show columns",
+    "search": "Search products...",
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
     "title": "Products",
     "addNew": "Add New Product",
     "basicInfo": "Basic Information",
@@ -830,8 +965,8 @@ const resources = {
 
   "statistics": {
     "all": "All Products",
-    "available": "Available Products",
-    "lowStock": "Low Stock Products",
+    "available": "Available ",
+    "lowStock": "Low Stock ",
     "notAvailable": "Not Available",
     "hidden": "Hidden Products",
     "unit": "item"
@@ -987,7 +1122,129 @@ const resources = {
     "saveChanges": "Save Changes",
     "saving": "Saving...",
     "saveFailed": "Failed to save changes",
-    "createFailed": "Failed to create new member"
+    "createFailed": "Failed to create new member",
+    "saveSuccess": "Member updated successfully!",
+    "createSuccess": "Member created successfully!",
+    "saveFailed": "Failed to update member.",
+    "createFailed": "Failed to create member."
+  },
+
+   "inventory": {
+    "title": "Inventory",
+    "loadingStats": "Loading statistics...",
+    "addProduct": "Add New Product",
+    "search": "Search",
+
+    "unit": {
+      "product": "Product"
+    },
+
+    "stats": {
+      "allProducts": "Total Products",
+      "availableProducts": "Available ",
+      "lowStockProducts": "Low Stock",
+      "notAvailableProducts": "Out of Stock",
+      "hiddenProducts": "Hidden Products"
+    },
+
+    "table": {
+      "productImage": "Product Image",
+      "productName": "Product Name",
+      "productCode": "Product Code",
+      "category": "Category",
+      "quantity": "Current Quantity",
+      "minStock": "Minimum Stock",
+      "status": "Status",
+      "lastUpdate": "Last Updated",
+      "restockSuggestion": "Restock Suggestion"
+    },
+
+    "status": {
+      "available": "Available",
+      "lowStock": "Low Stock",
+      "outOfStock": "Out of Stock",
+      "hidden": "Hidden"
+    },
+
+    "suggestion": {
+      "available": "Product is available",
+      "lowStock": "Add more stock",
+      "outOfStock": "Product is currently out of stock",
+      "hidden": "Product is hidden by the store"
+    }
+  },
+   "editProfile": {
+    "storeName": "Store Name",
+    "mobileNumber": "Mobile Number",
+    "save": "Save",
+    "saving": "Saving...",
+    "loading": "Loading profile...",
+    "loadError": "Failed to load profile",
+    "alert": {
+      "success": "Profile updated successfully",
+      "fail": "Failed to update profile",
+      "error": "An error occurred while saving data"
+    }
+  },
+
+   "notifications": {
+    "type": "Notification Type",
+    "dashboard": "Dashboard",
+    "sms": "SMS",
+    "save": "Save",
+    "notification": {
+      "newOrder": "New Order Received",
+      "statusChange": "Order Status Changed",
+      "orderCanceled": "Order Canceled",
+      "lowStockProduct": "Low Stock Product",
+      "outOfStock": "Out of Stock",
+      "newReview": "New Review Added"
+    }
+  },
+   "changePassword": {
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "save": "Save",
+    "saving": "Saving...",
+    "errorTitle": "Error",
+    "fillFields": "Please fill in all fields",
+    "passwordMismatch": "Password and confirmation do not match",
+    "updateFailed": "Failed to change password",
+    "updateError": "An error occurred while changing the password"
+  },
+  "logOutModal": {
+    "iconAlt": "Logout icon",
+    "confirmTitle": "Confirm Logout",
+    "confirmMessage": "Are you sure you want to log out of your account?",
+    "cancel": "Cancel",
+    "logout": "Log Out"
+  },
+  "profileTabs": {
+    "editProfile": "Edit Profile",
+    "notifications": "Notifications",
+    "changePassword": "Change Password",
+    "logout": "Log Out"
+  },
+   "orders_search_placeholder": "Search orders...",
+  "orders_date_label": "Select date range",
+  "orders_no_orders_message": "No orders to display",
+  "orders_th_id": "Order ID",
+  "orders_th_customer": "Customer",
+  "orders_th_date": "Date",
+  "orders_th_payment": "Payment",
+  "orders_th_total": "Total",
+  "orders_th_status": "Status",
+  "orders_th_actions": "Actions",
+  "orders_action_view": "View",
+   "filters": {
+    "id": "ID",
+    "customer": "Customer",
+    "date": "Date",
+    "payment": "Payment",
+    "total": "Total",
+    "status": "Status"
   }
 
 

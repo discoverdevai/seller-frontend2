@@ -5,6 +5,8 @@ import api from "../../Api/Axios";
 
 import { ProductList } from "./ProductList";
 import { ProductsPage } from "./ProductsPage";
+import { Skeleton } from "@heroui/react";
+import { DashboardSkeleton } from "../../components/skeleton";
 
 /* ---------------- Loader Component ---------------- */
 const Loader = ({ text }) => (
@@ -91,7 +93,7 @@ export const ProductPage = () => {
 
         {/* 🔥 Loading */}
         {loadingProducts ? (
-          <Loader text={t("products.loading")} />
+         <DashboardSkeleton />
         ) : hasProducts ? (
           <ProductList products={products} />
         ) : (

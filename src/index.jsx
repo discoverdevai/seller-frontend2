@@ -15,6 +15,8 @@ import { Provider } from "react-redux";
 import store from "./Store/Store";
 import { HeroUIProvider } from "@heroui/react";
 import{Register} from "./screens/Register/Register"
+import { Toaster } from "react-hot-toast"; // <-- import Toaster
+
 
 import "./i18n";
 
@@ -24,6 +26,14 @@ createRoot(document.getElementById("app")).render(
     <Provider store={store}>
       
     <BrowserRouter>
+     <Toaster
+          position="top-right"
+          reverseOrder={false}
+          toastOptions={{
+            duration: 3000, // auto-close after 3s
+            style: { fontSize: "14px", fontWeight: "500" },
+          }}
+        />
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/home" element={<Screen />} />

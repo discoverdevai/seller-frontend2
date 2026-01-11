@@ -4,15 +4,18 @@ import { EditProfileScreen } from "./EditProfileScreen";
 import { Notifications } from "./Notifications";
 import { ChangePasswordScreen } from "./ChangePasswordScreen";
 import { LogoutModal } from "./LogoutModal";
-
-const tabItems = [
-  { label: "تعديل الملف الشخصي", id: "editProfileSettings" },
-  { label: "التنبيهات", id: "notifications" },
-  { label: "تغيير كلمة المرور", id: "changePassword" },
-  { label: "تسجيل الخروج", id: "logout" },
-];
+import { useTranslation } from "react-i18next";
 
 export const MainProfileScreen = () => {
+  const { t } = useTranslation();
+
+  const tabItems = [
+    { label: t("profileTabs.editProfile"), id: "editProfileSettings" },
+    { label: t("profileTabs.notifications"), id: "notifications" },
+    { label: t("profileTabs.changePassword"), id: "changePassword" },
+    { label: t("profileTabs.logout"), id: "logout" },
+  ];
+
   const [activeTab, setActiveTab] = useState("editProfileSettings");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -77,7 +80,7 @@ export const MainProfileScreen = () => {
       {showLogoutModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="relative">
-            {/* زر إغلاق */}
+            {/* Close button */}
             <button
               className="absolute top-4 left-4 text-xl text-white"
               onClick={() => setShowLogoutModal(false)}
