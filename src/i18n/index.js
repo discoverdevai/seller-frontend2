@@ -623,7 +623,13 @@ const resources = {
     "payment": "طريقة الدفع",
     "total": "المجموع",
     "status": "الحالة"
-  }
+  },
+  "today": "اليوم",
+  "this_week": "هذا الأسبوع",
+  "this_month": "هذا الشهر",
+  "no_data": "لا توجد بيانات للعرض",
+
+    "payment_methods_title": "طرق الدفع",
 
     },
   },
@@ -1245,8 +1251,18 @@ const resources = {
     "payment": "Payment",
     "total": "Total",
     "status": "Status"
-  }
+  },
 
+  "عملاء جدد": "New Customers",
+  "عملاء نشطون": "Active Customers",
+  "عملاء متكررون": "Repeat Customers",
+  "عملاء غير نشطون": "Inactive Customers",
+  "عملاء كبار": "VIP Customers",
+  "today": "Today",
+  "this_week": "This Week",
+  "this_month": "This Month",
+  "no_data": "No data available",
+  "payment_methods_title": "Payment Methods",
 
     },
   },
